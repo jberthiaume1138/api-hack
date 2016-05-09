@@ -22,10 +22,9 @@ var FishFinder = {
 	    		$.each(data.items, function(i,item) {
 	    		console.log(item);
 
-	     		FishFinder.generateOutput(item);
+	     		FishFinder.generateImageOutput(item);
 
-
-	     		if ( i == 4 ) return false;
+	     		if ( i == 4 ) return false; //only return 5 images for now
 	    	});
 		});
 
@@ -45,7 +44,8 @@ var FishFinder = {
 		$.getJSON(endpointURL, params, function(data) {
 			//var data = data.items[0].snippet.title;
 			console.log(data.items);
-			//showResults(data.items);
+			FishFinder.generateVideoOutput(data.items);
+			
 		});
 	},
 
@@ -65,8 +65,25 @@ var FishFinder = {
    		 });
 	},
 
-	generateOutput: function(item) {
-		$("<img />").attr("src", item.media.m).appendTo("#images");
+	generateImageOutput: function(item) {
+		// images
+		$("<img />").attr("src", item.media.m).appendTo("#images");	
+	},
+
+	generateVideoOutput: function(results) {
+		// videos
+		var html = '';
+
+		$.each(results,function(index,value) {
+			console.log(value.snippet.title);
+			html += '<div>';
+			html += '<p>' + value.snippet.title + '</p>';
+			html += '<a href=https://www.youtube.com/watch?v=' + value.id.videoId + ' target="blank">';
+			html += '<img src=' + value.snippet.thumbnails.medium.url + '></a>';
+			html += '</div>';
+		});
+
+		$('#videos').html(html);
 	}
 
 
