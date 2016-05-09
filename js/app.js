@@ -33,7 +33,20 @@ var FishFinder = {
 	},
 
 	getVideos: function(tag) {
+		var params = {
+			part: 'snippet',
+			q: tag,
+			r: 'json',
+			key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
+		};
 
+		var endpointURL = 'https://www.googleapis.com/youtube/v3/search';
+
+		$.getJSON(endpointURL, params, function(data) {
+			//var data = data.items[0].snippet.title;
+			console.log(data.items);
+			//showResults(data.items);
+		});
 	},
 
 	getInfo: function(tag) {
@@ -50,9 +63,6 @@ var FishFinder = {
 	        error: function (errorMessage) {
 	        }
    		 });
-
-
-
 	},
 
 	generateOutput: function(item) {
@@ -66,6 +76,7 @@ $('#btnSearch').click(function() {
 	$('#images').empty();
 	var tag = $('#inputFinder').val();
 	FishFinder.getPictures(tag);
+	FishFinder.getVideos(tag);
 	FishFinder.getInfo(tag);
 	$('#inputFinder').val('');
 });
