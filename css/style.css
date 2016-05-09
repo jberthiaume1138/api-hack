@@ -9,6 +9,8 @@ body {
 	display: none;
 }
 
+
+/*----------------------- header ---------------------------*/
 header {
 	width: 100%;
 	margin: 0 auto;
@@ -18,4 +20,20 @@ header {
 
 header h1 {
 	text-align: center;;
+}
+
+/*------------------------ search --------------------------*/
+
+#search div {
+	margin: 0 auto;
+	width: 100%;
+	text-align: center;
+}
+
+#search p {
+	text-align: center;
+}
+
+#inputFinder {
+	
 }
