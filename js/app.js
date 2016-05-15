@@ -57,7 +57,8 @@ var FishFinder = {
 	        async: false,
 	        dataType: "json",
 	        success: function (data, textStatus, jqXHR) {
-	            console.log(data);
+	            // console.log(data);
+	            FishFinder.generateInfo(data);
 	        },
 	        error: function (errorMessage) {
 	        }
@@ -83,7 +84,29 @@ var FishFinder = {
 		});
 
 		$('#videos').html(html);
+	},
+
+	generateInfo: function(data) {
+		console.log(data);
+												// the wikipedia JSON isn't very...structured
+		var wikiMarkup = data.parse.text["*"];	// so shove the returned Wikipedia HTML into a variable for processing
+  
+        var blurb = $('<div></div>').html(wikiMarkup);	// wrap the whole wiki markup in a div so we can use jQuery against it
+        $('#info').html($(blurb).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
+
+        // var html = '';
+
+        // // var blurb = info;
+
+        // html = $(info).find('p');
+
+
+
+
+        // $('#info').html(html);
 	}
+
+
 
 
 }; // end of object
@@ -91,8 +114,12 @@ var FishFinder = {
 $('#btnSearch').click(function() {
 	$('#images').empty();
 	var tag = $('#inputFinder').val();
-	FishFinder.getPictures(tag);
-	FishFinder.getVideos(tag);
+
+	//debugging stub
+	tag = 'moorish idol';
+
+		// FishFinder.getPictures(tag);
+	// FishFinder.getVideos(tag);
 	FishFinder.getInfo(tag);
 	$('#inputFinder').val('');
 });
