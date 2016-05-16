@@ -31,6 +31,7 @@ var FishFinder = {
 	},
 
 	getVideos: function(tag) {
+		// youtube videos
 		var params = {
 			part: 'snippet',
 			q: tag,
@@ -49,6 +50,7 @@ var FishFinder = {
 	},
 
 	getInfo: function(tag) {
+		// wikipedia page
 		var url = "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?";
 		$.ajax({
 	        type: "GET",
@@ -91,22 +93,12 @@ var FishFinder = {
 												// the wikipedia JSON isn't very...structured
 		var wikiMarkup = data.parse.text["*"];	// so shove the returned Wikipedia HTML into a variable for processing
   
-        var blurb = $('<div></div>').html(wikiMarkup);	// wrap the whole wiki markup in a div so we can use jQuery against it
+  		var blurb = $('<div></div>').html(wikiMarkup);	// wrap the whole wiki markup in a div so we can use jQuery against it
+       	blurb.find('a').each(function() {			// rip out the links as they are dead ends
+       		$(this).replaceWith($(this).html()); 
+       	});
         $('#info').html($(blurb).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
-
-        // var html = '';
-
-        // // var blurb = info;
-
-        // html = $(info).find('p');
-
-
-
-
-        // $('#info').html(html);
 	}
-
-
 
 
 }; // end of object
@@ -118,9 +110,10 @@ $('#btnSearch').click(function() {
 	//debugging stub
 	tag = 'moorish idol';
 
-		// FishFinder.getPictures(tag);
-	// FishFinder.getVideos(tag);
+	FishFinder.getPictures(tag);
+	FishFinder.getVideos(tag);
 	FishFinder.getInfo(tag);
+	
 	$('#inputFinder').val('');
 });
 
