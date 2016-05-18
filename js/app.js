@@ -9,7 +9,7 @@ $(document).ready(function(){
 
 var FishFinder = { 
 
-	getPictures: function(tag) {
+	getImages: function(tag) {
 		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
 	  		{
 			    tags: tag,
@@ -18,10 +18,11 @@ var FishFinder = {
 	  		},
 
 			function(data) {
+				console.log(data);
 	    		$.each(data.items, function(i,item) {
-	    		console.log(item);
+	    		// console.log(item);
 
-	     		FishFinder.generateImageOutput(item);
+	     		$('#images').append(FishFinder.generateImageOutput(item));
 
 	     		if ( i == 4 ) return false; //only return 5 images for now
 	    	});
@@ -52,24 +53,93 @@ var FishFinder = {
 	getInfo: function(tag) {
 		// wikipedia page
 		var url = "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?";
-		$.ajax({
-	        type: "GET",
-	        url: url,
-	        contentType: "application/json; charset=utf-8",
-	        async: false,
-	        dataType: "json",
-	        success: function (data, textStatus, jqXHR) {
-	            // console.log(data);
-	            FishFinder.generateInfo(data);
-	        },
-	        error: function (errorMessage) {
-	        }
-   		 });
+		// $.ajax({
+	 //        type: "GET",
+	 //        url: url,
+	 //        contentType: "application/json; charset=utf-8",
+	 //        async: false,
+	 //        dataType: "json",
+	 //        success: function (data, textStatus, jqXHR) {
+	 //            // console.log(data);
+	 //            FishFinder.generateInfo(data);
+	 //        },
+	 //        error: function (errorMessage) {
+	 //        	// some error trapping here
+	 //        }
+  //  		 });
+
+
+	
+
+		$.getJSON(url, function(data,textStatus,jqXHR) {
+			FishFinder.generateInfo(data);
+		});
+
+
+	},
+
+	getEverything: function(tag) {
+		var promiseImages = $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+		  						{
+				    				tags: tag,
+				    				tagmode: "any",
+				    				format: "json"
+		  						});
+							// function(data) {
+					  //   		$.each(data.items, function(i,item) {
+						 //    		// console.log(item);
+						 //     		$('#images').append(FishFinder.generateImageOutput(item));
+						 //     		if ( i == 4 ) return false; //only return 5 images for now
+	    		// 				});
+							// });
+
+		var promiseVideos = $.getJSON('https://www.googleapis.com/youtube/v3/search', 
+								{
+									part: 'snippet',
+									q: tag,
+									r: 'json',
+									key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
+								});			
+
+
+		var promiseWiki = $.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?");
+
+
+
+
+
+
+		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {
+			console.log(imageData);
+			console.log(videoData);
+			console.log(wikiData)
+
+			$.each(imageData.items, function(i,item) {
+				$('#images').append(FishFinder.generateImageOutput(item));
+				if ( i == 4 ) return false; //only return 5 images for now
+	    	});
+
+	    	// FishFinder.generateVideoOutput(videoData.items);
+	    	// FishFinder.generateInfo(data);
+		});
+
 	},
 
 	generateImageOutput: function(item) {
 		// images
-		$("<img />").attr("src", item.media.m).appendTo("#images");	
+		
+
+		// var imageContainer = $('.hidden .grid-item').clone();
+		// $(imageContainer).removeClass('.hidden');
+		
+		var imageContainer = $("<img />").attr("src", item.media.m);
+
+		
+		return(imageContainer);
+
+
+		// $('#images').append(imageContainer);
+		// $(imageContainer.)
 	},
 
 	generateVideoOutput: function(results) {
@@ -93,12 +163,23 @@ var FishFinder = {
 												// the wikipedia JSON isn't very...structured
 		var wikiMarkup = data.parse.text["*"];	// so shove the returned Wikipedia HTML into a variable for processing
   
-  		var blurb = $('<div></div>').html(wikiMarkup);	// wrap the whole wiki markup in a div so we can use jQuery against it
-       	blurb.find('a').each(function() {			// rip out the links as they are dead ends
+  		var wrapped = $('<div></div>').html(wikiMarkup);	// wrap the whole wiki markup in a div so we can use jQuery against it
+       	wrapped.find('a').each(function() {			// rip out the links as they are dead ends
        		$(this).replaceWith($(this).html()); 
        	});
-        $('#info').html($(blurb).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
+        $('#info').html($(wrapped).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
+	},
+
+	activateMasonry: function() {
+		$('.grid').masonry({
+		
+			// options
+			itemSelector: '.grid-item',
+			columnWidth: 200
+		});
 	}
+
+
 
 
 }; // end of object
@@ -110,9 +191,11 @@ $('#btnSearch').click(function() {
 	//debugging stub
 	tag = 'moorish idol';
 
-	FishFinder.getPictures(tag);
-	FishFinder.getVideos(tag);
-	FishFinder.getInfo(tag);
+	FishFinder.getEverything(tag);
+
+	// FishFinder.getImages(tag);
+	// FishFinder.getVideos(tag);
+	// FishFinder.getInfo(tag);
 	
 	$('#inputFinder').val('');
 });
