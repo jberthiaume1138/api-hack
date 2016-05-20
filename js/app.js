@@ -10,6 +10,7 @@ $(document).ready(function(){
 var FishFinder = { 
 
 	getImages: function(tag) {
+		//flickr images
 		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
 	  		{
 			    tags: tag,
@@ -59,37 +60,58 @@ var FishFinder = {
 	},
 
 	getEverything: function(tag) {
-		var promiseImages = $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
-		  						{
-				    				tags: tag,
-				    				tagmode: "any",
-				    				format: "json"
-		  						});
 
-		var promiseVideos = $.getJSON('https://www.googleapis.com/youtube/v3/search', 
-								{
-									part: 'snippet',
-									q: tag,
-									r: 'json',
-									key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
-								});			
+		var promiseImages = jQuery.Deferred();
 
-
-		var promiseWiki = $.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?");
+		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+	                {
+	                  tags: tag,
+	                  tagmode: "any",
+	                  format: "json"
+	                })
+	                .done(function(data) {
+	                  promiseImages.resolve(data);
+	                })
+	                .fail(function(){
+	                  promiseImages.reject();
+	                });
 
 
-		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {
+		var promiseVideos = $.Deferred();
+
+		$.getJSON('https://www.googleapis.com/youtube/v3/search', 
+					{
+						part: 'snippet',
+						q: tag,
+						r: 'json',
+						key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
+					})		
+					.done(function(data) {
+						promiseVideos.resolve(data);
+					});
+
+
+
+		var promiseWiki = $.Deferred();
+
+		$.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?")
+					.done(function(data) {
+						promiseWiki.resolve(data);
+					});
+
+		
+		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	//this is attached to when
 			console.log(imageData);
 			console.log(videoData);
-			console.log(wikiData)
+			console.log(wikiData);
 
-			// $.each(imageData.items, function(i,item) {
-			// 	$('#images').append(FishFinder.generateImageOutput(item));
-			// 	if ( i == 4 ) return false; //only return 5 images for now
-	  //   	});
+			$.each(imageData.items, function(i,item) {
+				$('#images').append(FishFinder.generateImageOutput(item));
+				if ( i == 4 ) return false; //only return 5 images for now
+	    	});
 
-	    	// FishFinder.generateVideoOutput(videoData.items);
-	    	// FishFinder.generateInfo(data);
+	    	FishFinder.generateVideoOutput(videoData.items);
+	    	FishFinder.generateInfo(wikiData);
 		});
 
 	},
@@ -161,11 +183,11 @@ $('#btnSearch').click(function() {
 	//debugging dummy value
 	tag = 'moorish idol';
 
-	// FishFinder.getEverything(tag);
+	FishFinder.getEverything(tag);
 
-	FishFinder.getImages(tag);
-	FishFinder.getVideos(tag);
-	FishFinder.getWiki(tag);
+	// FishFinder.getImages(tag);
+	// FishFinder.getVideos(tag);
+	// FishFinder.getWiki(tag);
 	
 	$('#inputFinder').val('');
 });
