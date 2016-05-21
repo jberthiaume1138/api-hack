@@ -61,7 +61,7 @@ var FishFinder = {
 
 	getEverything: function(tag) {
 
-		var promiseImages = jQuery.Deferred();
+		var promiseImages = $.Deferred();
 
 		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
 	                {
@@ -70,10 +70,10 @@ var FishFinder = {
 	                  format: "json"
 	                })
 	                .done(function(data) {
-	                  promiseImages.resolve(data);
+	                	promiseImages.resolve(data);
 	                })
 	                .fail(function(){
-	                  promiseImages.reject();
+	                 	promiseImages.reject();
 	                });
 
 
@@ -91,7 +91,6 @@ var FishFinder = {
 					});
 
 
-
 		var promiseWiki = $.Deferred();
 
 		$.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?")
@@ -100,19 +99,40 @@ var FishFinder = {
 					});
 
 		
-		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	//this is attached to when
-			console.log(imageData);
-			console.log(videoData);
-			console.log(wikiData);
+		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
+			// console.log(imageData);
+			// console.log(videoData);
+			// console.log(wikiData);
 
-			$.each(imageData.items, function(i,item) {
-				$('#images').append(FishFinder.generateImageOutput(item));
-				if ( i == 4 ) return false; //only return 5 images for now
-	    	});
+			FishFinder.generateMasonryOutput(imageData,videoData);
 
-	    	FishFinder.generateVideoOutput(videoData.items);
+			// $.each(imageData.items, function(i,item) {
+
+			// 	$('#images').append('<div class="grid-item">' + FishFinder.generateImageOutput(item) + '</div>');
+			// 	if ( i == 4 ) return false; //only return 5 images for now
+	  //   	});
+
+	  //   	FishFinder.generateVideoOutput(videoData.items);
 	    	FishFinder.generateInfo(wikiData);
 		});
+
+	},
+
+	generateMasonryOutput: function(imageData,videoData) {
+
+		var arrayItems = [];
+
+		$.each(imageData.items, function(i,item) {
+			arrayItems.push(item);
+		});
+
+		$.each(videoData.items, function(i,item) {
+			arrayItems.push(item);
+		});
+
+		for (var i = 0; i < arrayItems.length; i++) {
+			console.log(arrayItems[i]);
+		};
 
 	},
 
@@ -159,20 +179,20 @@ var FishFinder = {
        		$(this).replaceWith($(this).html()); 
        	});
         $('#wiki').html($(wrapped).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
-	},
-
-
-
-
-	activateMasonry: function() {
-		// TODO
-		$('.grid').masonry({
-		
-			// options
-			itemSelector: '.grid-item',
-			columnWidth: 200
-		});
 	}
+
+
+
+
+	// activateMasonry: function() {
+	// 	// TODO
+	// 	$('.grid').masonry({
+		
+	// 		// options
+	// 		itemSelector: '.grid-item',
+	// 		columnWidth: 200
+	// 	});
+	// }
 }; // end of object
 
 
