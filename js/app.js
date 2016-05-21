@@ -100,6 +100,7 @@ var FishFinder = {
 
 		
 		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
+			// debugging to make sure the AJAX calls are functioning
 			// console.log(imageData);
 			// console.log(videoData);
 			// console.log(wikiData);
@@ -120,6 +121,7 @@ var FishFinder = {
 
 	generateMasonryOutput: function(imageData,videoData) {
 
+		// store all the images and videos in an array
 		var arrayItems = [];
 
 		$.each(imageData.items, function(i,item) {
@@ -130,11 +132,42 @@ var FishFinder = {
 			arrayItems.push(item);
 		});
 
+		// // debugging remove later ----------------------
+		// for (var i = 0; i < arrayItems.length; i++) {
+		// 	console.log(arrayItems[i]);
+		// };
+		// // end debugging -------------------------------
+
+		// create HTML
 		for (var i = 0; i < arrayItems.length; i++) {
+			var newHTML = '';
+			newHTML += '<div class="grid-item">';
+			newHTML += 'Index=' + arrayItems[i];
+			newHTML += '</div>';
+			$('#images_videos').append(newHTML);
+
+			//debugging
 			console.log(arrayItems[i]);
 		};
 
+		//activate Masonry
+		var elem = document.querySelector('.grid');
+		var msnry = new Masonry( elem, {
+  			// options
+ 			 itemSelector: '.grid-item',
+  			columnWidth: 200
+		});
+
 	},
+
+
+
+
+
+
+
+
+
 
 	generateImageOutput: function(item) {
 		// images
