@@ -157,16 +157,16 @@ var FishFinder = {
 		});
 
 
-		// create HTML
+		// create html
 		for (var i = 0; i < collection.length; i++) {
-			var newHTML = '';
-			newHTML += '<div class="grid-item">';
+			var html = '';
+			html += '<div class="grid-item">';
 			
-			newHTML += '<a href="' + collection[i].fullsize_url + '" target="blank" >';
-			newHTML += '<img src="' + collection[i].thumbnail_url + '"></a>';
+			html += '<a href="' + collection[i].fullsize_url + '" target="blank" >';
+			html += '<img src="' + collection[i].thumbnail_url + '"alt="' + collection[i].title + '"></a>';
 
-			newHTML += '</div>';
-			$('#images_videos').append(newHTML);
+			html += '</div>';
+			$('#images_videos').append(html);
 
 			//debugging
 			// console.log(collection[i]);
@@ -185,7 +185,6 @@ var FishFinder = {
 	},
 
 	generateWiki: function(data) {
-		console.log(data);
 												// the wikipedia JSON isn't very...structured
 		var wikiMarkup = data.parse.text["*"];	// so shove the returned Wikipedia HTML into a variable for processing
   
