@@ -102,7 +102,7 @@ var FishFinder = {
 		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
 			// debugging to make sure the AJAX calls are functioning
 			// console.log(imageData);
-			// console.log(videoData);
+			console.log(videoData);
 			// console.log(wikiData);
 
 			FishFinder.generateMasonryOutput(imageData,videoData);
@@ -121,40 +121,59 @@ var FishFinder = {
 
 	generateMasonryOutput: function(imageData,videoData) {
 
-		// store all the images and videos in an array
+		function ImgVid (source,thumbnail,fullsize,title) {
+			this.source = source;
+			this.thumbnail = thumbnail;
+			this.fullsize = fullsize;
+			this.title = title;
+		};
+
+		// array to store each ImgVid object
 		var arrayItems = [];
 
-		$.each(imageData.items, function(i,item) {
-			arrayItems.push(item);
+		$.each(imageData.items, function(i,item) {		
+			var myImgVid = new ImgVid();
+		
+			myImgVid.source = 'flickr';
+			myImgVid.thumbnail = item.media.m;
+			myImgVid.fullsize = item.link;
+			myImgVid.title = item.title;
+
+			arrayItems.push(myImgVid);
+
+			if ( i == 9 ) return false; //only return 5 images for now
 		});
+
 
 		$.each(videoData.items, function(i,item) {
-			arrayItems.push(item);
+			var myImgVid = new ImgVid();
+
+			myImgVid.source = 'youtube';
+			myImgVid.thumbnail = item.snippet.thumbnails.medium.url;
+			myImgVid.fullsize = '';
+			myImgVid.title = item.snippet.title;
+
+			arrayItems.push(myImgVid);
 		});
 
-		// // debugging remove later ----------------------
-		// for (var i = 0; i < arrayItems.length; i++) {
-		// 	console.log(arrayItems[i]);
-		// };
-		// // end debugging -------------------------------
 
 		// create HTML
 		for (var i = 0; i < arrayItems.length; i++) {
 			var newHTML = '';
 			newHTML += '<div class="grid-item">';
-			newHTML += 'Index=' + arrayItems[i];
+			newHTML += '<img src="' + arrayItems[i].thumbnail + '">';
 			newHTML += '</div>';
 			$('#images_videos').append(newHTML);
 
 			//debugging
-			console.log(arrayItems[i]);
+			// console.log(arrayItems[i]);
 		};
 
 		//activate Masonry
 		var elem = document.querySelector('.grid');
 		var msnry = new Masonry( elem, {
   			// options
- 			 itemSelector: '.grid-item',
+ 			itemSelector: '.grid-item',
   			columnWidth: 200
 		});
 
@@ -202,6 +221,9 @@ var FishFinder = {
 		$('#videos').html(html);
 	},
 
+
+
+
 	generateInfo: function(data) {
 		console.log(data);
 												// the wikipedia JSON isn't very...structured
@@ -214,18 +236,6 @@ var FishFinder = {
         $('#wiki').html($(wrapped).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
 	}
 
-
-
-
-	// activateMasonry: function() {
-	// 	// TODO
-	// 	$('.grid').masonry({
-		
-	// 		// options
-	// 		itemSelector: '.grid-item',
-	// 		columnWidth: 200
-	// 	});
-	// }
 }; // end of object
 
 
@@ -238,10 +248,6 @@ $('#btnSearch').click(function() {
 
 	FishFinder.getEverything(tag);
 
-	// FishFinder.getImages(tag);
-	// FishFinder.getVideos(tag);
-	// FishFinder.getWiki(tag);
-	
 	$('#inputFinder').val('');
 });
 

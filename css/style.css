@@ -40,6 +40,11 @@ header h1 {
 
 /*------------------------ results --------------------------*/
 
+#results {
+	max-width: 1200px;
+}
+
+
 /*------------------------ masonry ---------------------------*/
 .grid-item { width: 200px; }
 .grid-item--width2 { width: 400px; }
