@@ -9,55 +9,55 @@ $(document).ready(function(){
 
 var FishFinder = { 
 
-	getImages: function(tag) {
-		//flickr images
-		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
-	  		{
-			    tags: tag,
-			    tagmode: "any",
-			    format: "json"
-	  		},
+	// getImages: function(tag) {
+	// 	//flickr images
+	// 	$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+	//   		{
+	// 		    tags: tag,
+	// 		    tagmode: "any",
+	// 		    format: "json"
+	//   		},
 
-			function(data) {
-				console.log(data);
-	    		$.each(data.items, function(i,item) {
-	    		// console.log(item);
+	// 		function(data) {
+	// 			console.log(data);
+	//     		$.each(data.items, function(i,item) {
+	//     		// console.log(item);
 
-	     		$('#images').append(FishFinder.generateImageOutput(item));
+	//      		$('#images').append(FishFinder.generateImageOutput(item));
 
-	     		if ( i == 4 ) return false; //only return 5 images for now
-	    	});
-		});
+	//      		if ( i == 4 ) return false; //only return 5 images for now
+	//     	});
+	// 	});
 
-		$('#resultsHeader').text('Images of ' + tag);
-	},
+	// 	$('#resultsHeader').text('Images of ' + tag);
+	// },
 
-	getVideos: function(tag) {
-		// youtube videos
-		var params = {
-			part: 'snippet',
-			q: tag,
-			r: 'json',
-			key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
-		};
+	// getVideos: function(tag) {
+	// 	// youtube videos
+	// 	var params = {
+	// 		part: 'snippet',
+	// 		q: tag,
+	// 		r: 'json',
+	// 		key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
+	// 	};
 
-		var endpointURL = 'https://www.googleapis.com/youtube/v3/search';
+	// 	var endpointURL = 'https://www.googleapis.com/youtube/v3/search';
 
-		$.getJSON(endpointURL, params, function(data) {
-			//var data = data.items[0].snippet.title;
-			console.log(data.items);
-			FishFinder.generateVideoOutput(data.items);	
-		});
-	},
+	// 	$.getJSON(endpointURL, params, function(data) {
+	// 		//var data = data.items[0].snippet.title;
+	// 		console.log(data.items);
+	// 		FishFinder.generateVideoOutput(data.items);	
+	// 	});
+	// },
 
-	getWiki: function(tag) {
-		// wikipedia
-		var url = "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?";
+	// getWiki: function(tag) {
+	// 	// wikipedia
+	// 	var url = "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?";
 
-		$.getJSON(url, function(data) {
-			FishFinder.generateInfo(data);
-		});
-	},
+	// 	$.getJSON(url, function(data) {
+	// 		FishFinder.generateInfo(data);
+	// 	});
+	// },
 
 	getEverything: function(tag) {
 
@@ -102,129 +102,89 @@ var FishFinder = {
 		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
 			// debugging to make sure the AJAX calls are functioning
 			// console.log(imageData);
-			console.log(videoData);
+			// console.log(videoData);
 			// console.log(wikiData);
 
+			FishFinder.generateWiki(wikiData);
 			FishFinder.generateMasonryOutput(imageData,videoData);
-
-			// $.each(imageData.items, function(i,item) {
-
-			// 	$('#images').append('<div class="grid-item">' + FishFinder.generateImageOutput(item) + '</div>');
-			// 	if ( i == 4 ) return false; //only return 5 images for now
-	  //   	});
-
-	  //   	FishFinder.generateVideoOutput(videoData.items);
-	    	FishFinder.generateInfo(wikiData);
+	    	
 		});
 
 	},
 
 	generateMasonryOutput: function(imageData,videoData) {
-
-		function ImgVid (source,thumbnail,fullsize,title) {
+		// the APIs that populate imageData and videoData return vastly different JSON payloads
+		// so define a class to store the relevant info from either to make it consistent
+		function Gallery (source,thumbnail_url,fullsize_url,title) {
 			this.source = source;
-			this.thumbnail = thumbnail;
-			this.fullsize = fullsize;
+			this.thumbnail_url = thumbnail_url;
+			this.fullsize_url = fullsize_url;
 			this.title = title;
 		};
 
-		// array to store each ImgVid object
-		var arrayItems = [];
+		// array to store each Gallery object
+		var collection = [];
 
 		$.each(imageData.items, function(i,item) {		
-			var myImgVid = new ImgVid();
+			// read through each imageData item and extract the needed data
+			// store in new instance of the Gallery object
+			// API specific URL crafting is here 
+			var objGallery = new Gallery();
 		
-			myImgVid.source = 'flickr';
-			myImgVid.thumbnail = item.media.m;
-			myImgVid.fullsize = item.link;
-			myImgVid.title = item.title;
+			objGallery.source = 'flickr';
+			objGallery.thumbnail_url = item.media.m;
+			objGallery.fullsize_url = item.link;
+			objGallery.title = item.title;
 
-			arrayItems.push(myImgVid);
+			collection.push(objGallery);	//store each object in collection array
 
-			if ( i == 9 ) return false; //only return 5 images for now
+			if ( i == 9 ) return false; //only return 10 images for now
 		});
 
 
 		$.each(videoData.items, function(i,item) {
-			var myImgVid = new ImgVid();
+			// read through each videoData item and extract the needed data
+			// store in new instance of the Gallery object
+			// API specific URL crafting is here 
+			var objGallery = new Gallery();
 
-			myImgVid.source = 'youtube';
-			myImgVid.thumbnail = item.snippet.thumbnails.medium.url;
-			myImgVid.fullsize = '';
-			myImgVid.title = item.snippet.title;
+			objGallery.source = 'youtube';
+			objGallery.thumbnail_url = item.snippet.thumbnails.medium.url;
+			objGallery.fullsize_url = 'https://www.youtube.com/watch?v=' + item.id.videoId;
+			objGallery.title = item.snippet.title;
 
-			arrayItems.push(myImgVid);
+			collection.push(objGallery);	//store each object in collection array
 		});
 
 
 		// create HTML
-		for (var i = 0; i < arrayItems.length; i++) {
+		for (var i = 0; i < collection.length; i++) {
 			var newHTML = '';
 			newHTML += '<div class="grid-item">';
-			newHTML += '<img src="' + arrayItems[i].thumbnail + '">';
+			
+			newHTML += '<a href="' + collection[i].fullsize_url + '" target="blank" >';
+			newHTML += '<img src="' + collection[i].thumbnail_url + '"></a>';
+
 			newHTML += '</div>';
 			$('#images_videos').append(newHTML);
 
 			//debugging
-			// console.log(arrayItems[i]);
+			// console.log(collection[i]);
 		};
 
-		//activate Masonry
+		
+		// activate Masonry
+		// need to make sure this doesn't happen till after the images load in the DIV
 		var elem = document.querySelector('.grid');
 		var msnry = new Masonry( elem, {
   			// options
  			itemSelector: '.grid-item',
-  			columnWidth: 200
+  			columnWidth: 240
 		});
 
 	},
 
-
-
-
-
-
-
-
-
-
-	generateImageOutput: function(item) {
-		// images
-		
-
-		// var imageContainer = $('.hidden .grid-item').clone();
-		// $(imageContainer).removeClass('.hidden');
-		
-		var imageContainer = $("<img />").attr("src", item.media.m);
-
-		
-		return(imageContainer);
-
-
-		// $('#images').append(imageContainer);
-		// $(imageContainer.)
-	},
-
-	generateVideoOutput: function(results) {
-		// videos
-		var html = '';
-
-		$.each(results,function(index,value) {
-			console.log(value.snippet.title);
-			html += '<div>';
-			html += '<p>' + value.snippet.title + '</p>';
-			html += '<a href=https://www.youtube.com/watch?v=' + value.id.videoId + ' target="blank">';
-			html += '<img src=' + value.snippet.thumbnails.medium.url + '></a>';
-			html += '</div>';
-		});
-
-		$('#videos').html(html);
-	},
-
-
-
-
-	generateInfo: function(data) {
+	generateWiki: function(data) {
 		console.log(data);
 												// the wikipedia JSON isn't very...structured
 		var wikiMarkup = data.parse.text["*"];	// so shove the returned Wikipedia HTML into a variable for processing
@@ -235,6 +195,52 @@ var FishFinder = {
        	});
         $('#wiki').html($(wrapped).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
 	}
+
+
+
+
+
+
+
+
+
+	// generateImageOutput: function(item) {
+	// 	// images
+		
+
+	// 	// var imageContainer = $('.hidden .grid-item').clone();
+	// 	// $(imageContainer).removeClass('.hidden');
+		
+	// 	var imageContainer = $("<img />").attr("src", item.media.m);
+
+		
+	// 	return(imageContainer);
+
+
+	// 	// $('#images').append(imageContainer);
+	// 	// $(imageContainer.)
+	// },
+
+	// generateVideoOutput: function(results) {
+	// 	// videos
+	// 	var html = '';
+
+	// 	$.each(results,function(index,value) {
+	// 		console.log(value.snippet.title);
+	// 		html += '<div>';
+	// 		html += '<p>' + value.snippet.title + '</p>';
+	// 		html += '<a href=https://www.youtube.com/watch?v=' + value.id.videoId + ' target="blank">';
+	// 		html += '<img src=' + value.snippet.thumbnail_urls.medium.url + '></a>';
+	// 		html += '</div>';
+	// 	});
+
+	// 	$('#videos').html(html);
+	// },
+
+
+
+
+
 
 }; // end of object
 
