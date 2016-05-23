@@ -120,11 +120,11 @@ var FishFinder = {
 		};
 
 		//create html v2.0 - randomize
-		while (collection.length > 0) {
-			// generate random value in the range of collection index
-			// pop an item
-			// process it
-		};
+		// while (collection.length > 0) {
+		// 	// generate random value in the range of collection index
+		// 	// pop an item
+		// 	// process it
+		// };
 
 
 
