@@ -6,31 +6,55 @@ body {
 }
 
 /*----------------------- header ---------------------------*/
+
 header {
 	width: 100%;
 	margin: 0 auto;
-	background-color: #D3D3D3;
+	background-color: #0011FF;
 	/*position: fixed;*/
+	padding: 0.5em 0;
 }
 
 header h1 {
-	text-align: center;;
+	width: 100%;
+	text-align: center;
+	font-family: 'Amatic SC', cursive;
+	font-size: 3em;
+	font-weight: 700;
+	color: white;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
-/*------------------------ search --------------------------*/
-
-#search div {
+/*------------------------ search -----------------*/
+#search {
 	margin: 0 auto;
 	width: 100%;
+	padding: 0;
+	border: 0;
 	text-align: center;
 }
 
 #search p {
+	font-family: 'Amatic SC', cursive;
+	font-size: 1.75em;
 	text-align: center;
+	color: white;
+	padding: 0.3em 0;
+	border: 0;
+	margin: 0;
 }
 
 #inputFinder {
 	
+}
+
+#btnSearch {
+	font-family: 'Amatic SC', cursive;
+	font-size: 1.5em;
+	font-weight: 700;
+	width: 4em;
 }
 
 /*------------------------ masonry ---------------------------*/
@@ -45,8 +69,23 @@ header h1 {
 /*------------------------ results --------------------------*/
 
 #results {
-	max-width: 1200px;
+	/*max-width: 1200px;*/
 }
+
+#resultsHeader {
+	text-transform: uppercase;
+	font-family: "Palatino Linotype", "Book Antiqua", "Palatino", serif;
+	font-size: 1.5em;
+	width: 100%;
+	text-align: center;
+}
+
+#results p {
+	padding: 0 1em;
+	font-family: "Palatino Linotype", "Book Antiqua", "Palatino", serif;
+	font-size: 1em;
+}
+
 
 .gallery-image {
 	cursor: pointer;

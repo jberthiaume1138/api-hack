@@ -107,7 +107,7 @@ var FishFinder = {
 			// console.log(videoData);
 			// console.log(wikiData);
 
-			FishFinder.generateWiki(wikiData);
+			FishFinder.generateWiki(wikiData,tag);
 			FishFinder.generateMasonryOutput(imageData,videoData);
 	    	
 		});
@@ -184,7 +184,7 @@ var FishFinder = {
 		$('.gallery-image').on('click', function() {
 			// handler to activate modal overlay 
 
-			$('image-big').append('<img src="' + collection[i].fullsize_url + '" class="gallery-image" alt="' + collection[i].title + '">)';
+			// $('image-big').append('<img src="' + collection[i].fullsize_url + '" class="gallery-image" alt="' + collection[i].title + '">)';
 			$('.gallery-modal').append($('.image-big'));
 
 			$('.gallery-modal').css('display', 'block');
@@ -196,7 +196,9 @@ var FishFinder = {
 
 	},
 
-	generateWiki: function(data) {
+	generateWiki: function(data,tag) {
+
+		$('#resultsHeader').text(tag);
 												// the wikipedia JSON isn't very...structured
 		var wikiMarkup = data.parse.text["*"];	// so shove the returned Wikipedia HTML into a variable for processing
   
