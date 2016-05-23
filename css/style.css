@@ -11,7 +11,6 @@ header {
 	width: 100%;
 	margin: 0 auto;
 	background-color: #0011FF;
-	/*position: fixed;*/
 	padding: 0.5em 0;
 	display: flex;
 	flex-direction: row;
@@ -20,6 +19,12 @@ header {
 
 header img {
 	padding: 0 0.75em;
+}
+
+@media (max-width: 650px) {
+  header img {
+    display: none;
+  }
 }
 
 
