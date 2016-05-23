@@ -71,7 +71,9 @@ header h1 {
 }
 
 /*------------------------ masonry ---------------------------*/
-.grid-item { 	width: 240px; }
+.grid-item { 	
+	width: 240px;
+	padding-bottom: 10px; }
 
 .grid-item--width2 { width: 400px; }
 

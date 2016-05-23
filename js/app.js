@@ -1,5 +1,4 @@
 $(document).ready(function(){
-
 });
 
 (function() { 
@@ -110,10 +109,16 @@ var FishFinder = {
 		// this adds the FLICKR images first, then the YouTube thumbnails
 		for (var i = 0; i < collection.length; i++) {
 			var html = '';
-			html += '<div class="grid-item">';		
-			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title + '">';
+			html += '<div class="grid-item">';
+			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title;
+			html += '" data-image="' + collection[i].fullsize_url;
+			html += '">';
 			html += '</div>';
 			$('#gallery').append(html);
+
+
+
+
 		};
 
 		//create html v2.0 - randomize
@@ -123,29 +128,42 @@ var FishFinder = {
 		// 	// process it
 		// };
 
+
 		// activate Masonry
 		// need to make sure this doesn't happen till after the images load in the DIV
+		// perhaps use a time out...imagesLoad
 		var elem = document.querySelector('.grid');
 		var msnry = new Masonry( elem, {
   			// options
  			itemSelector: '.grid-item',
+ 			gutter: 10,
   			columnWidth: 240
 		});
+
 
 		// event handlers for the elements created after the AJAX calls
 		$('.gallery-image').on('click', function() {
 			// handler to activate modal overlay 
+
 			$('.gallery-modal').css('display', 'block');
+
 			console.log(this);
 
 			var bigImageHTML = '';
-			bigImageHTML += '<img src="' + this.src + '" alt="' + this.title + '"></a>';
+			bigImageHTML += '<img src="images/x-close.gif" class="close">';
+
+			var url = $(this).data("image");
+
+			bigImageHTML += '<img src="' + url  + '">';
+
+			console.log(bigImageHTML);
 
 			$('.gallery-modal').append(bigImageHTML);
 		});
 
 		$('.close').on('click', function() {
 			$('.gallery-modal').css('display', 'none');
+			$('.gallery-modal').empty();
 		});
 	},
 
