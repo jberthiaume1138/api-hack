@@ -1,6 +1,8 @@
 
 
 $(document).ready(function(){
+
+
 });
 
 (function() { 
@@ -162,17 +164,13 @@ var FishFinder = {
 			var html = '';
 			html += '<div class="grid-item">';
 			
-			html += '<a href="' + collection[i].fullsize_url + '" target="blank" >';
-			html += '<img src="' + collection[i].thumbnail_url + '"alt="' + collection[i].title + '"></a>';
+			//html += '<a href="' + collection[i].fullsize_url + '" target="blank" class="image-big" >';
+			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title + '"></a>';
 
 			html += '</div>';
 			$('#images_videos').append(html);
-
-			//debugging
-			// console.log(collection[i]);
 		};
 
-		
 		// activate Masonry
 		// need to make sure this doesn't happen till after the images load in the DIV
 		var elem = document.querySelector('.grid');
@@ -181,6 +179,20 @@ var FishFinder = {
  			itemSelector: '.grid-item',
   			columnWidth: 240
 		});
+
+		// event handlers for the elements created after the AJAX calls
+		$('.gallery-image').on('click', function() {
+			// handler to activate modal overlay 
+
+			$('image-big').append('<img src="' + collection[i].fullsize_url + '" class="gallery-image" alt="' + collection[i].title + '">)';
+			$('.gallery-modal').append($('.image-big'));
+
+			$('.gallery-modal').css('display', 'block');
+		});
+
+		$('.close').on('click',function() {
+			$('.gallery-modal').css('display', 'none');
+		})
 
 	},
 
@@ -244,6 +256,9 @@ var FishFinder = {
 }; // end of object
 
 
+
+
+
 $('#btnSearch').click(function() {
 	$('#images').empty();
 	var tag = $('#inputFinder').val();
@@ -255,5 +270,6 @@ $('#btnSearch').click(function() {
 
 	$('#inputFinder').val('');
 });
+
 
 })();
