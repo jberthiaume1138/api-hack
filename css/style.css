@@ -13,7 +13,15 @@ header {
 	background-color: #0011FF;
 	/*position: fixed;*/
 	padding: 0.5em 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
 }
+
+header img {
+	padding: 0 0.75em;
+}
+
 
 header h1 {
 	width: 100%;
@@ -86,6 +94,9 @@ header h1 {
 	font-size: 1em;
 }
 
+#gallery {
+	/*padding: 1em;*/
+}
 
 .gallery-image {
 	cursor: pointer;

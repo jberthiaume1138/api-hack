@@ -168,7 +168,7 @@ var FishFinder = {
 			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title + '"></a>';
 
 			html += '</div>';
-			$('#images_videos').append(html);
+			$('#gallery').append(html);
 		};
 
 		// activate Masonry
