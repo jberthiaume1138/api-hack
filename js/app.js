@@ -1,7 +1,4 @@
-
-
 $(document).ready(function(){
-
 
 });
 
@@ -10,56 +7,6 @@ $(document).ready(function(){
 'use strict'
 
 var FishFinder = { 
-
-	// getImages: function(tag) {
-	// 	//flickr images
-	// 	$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
-	//   		{
-	// 		    tags: tag,
-	// 		    tagmode: "any",
-	// 		    format: "json"
-	//   		},
-
-	// 		function(data) {
-	// 			console.log(data);
-	//     		$.each(data.items, function(i,item) {
-	//     		// console.log(item);
-
-	//      		$('#images').append(FishFinder.generateImageOutput(item));
-
-	//      		if ( i == 4 ) return false; //only return 5 images for now
-	//     	});
-	// 	});
-
-	// 	$('#resultsHeader').text('Images of ' + tag);
-	// },
-
-	// getVideos: function(tag) {
-	// 	// youtube videos
-	// 	var params = {
-	// 		part: 'snippet',
-	// 		q: tag,
-	// 		r: 'json',
-	// 		key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
-	// 	};
-
-	// 	var endpointURL = 'https://www.googleapis.com/youtube/v3/search';
-
-	// 	$.getJSON(endpointURL, params, function(data) {
-	// 		//var data = data.items[0].snippet.title;
-	// 		console.log(data.items);
-	// 		FishFinder.generateVideoOutput(data.items);	
-	// 	});
-	// },
-
-	// getWiki: function(tag) {
-	// 	// wikipedia
-	// 	var url = "http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?";
-
-	// 	$.getJSON(url, function(data) {
-	// 		FishFinder.generateInfo(data);
-	// 	});
-	// },
 
 	getEverything: function(tag) {
 
@@ -160,6 +107,7 @@ var FishFinder = {
 
 
 		// create html
+		// this adds the FLICKR images first, then the YouTube thumbnails
 		for (var i = 0; i < collection.length; i++) {
 			var html = '';
 			html += '<div class="grid-item">';
@@ -170,6 +118,15 @@ var FishFinder = {
 			html += '</div>';
 			$('#gallery').append(html);
 		};
+
+		//create html v2.0 - randomize
+		while (collection.length > 0) {
+			// generate random value in the range of collection index
+			// pop an item
+			// process it
+		};
+
+
 
 		// activate Masonry
 		// need to make sure this doesn't happen till after the images load in the DIV
@@ -210,30 +167,6 @@ var FishFinder = {
 	}
 
 
-
-
-
-
-
-
-
-	// generateImageOutput: function(item) {
-	// 	// images
-		
-
-	// 	// var imageContainer = $('.hidden .grid-item').clone();
-	// 	// $(imageContainer).removeClass('.hidden');
-		
-	// 	var imageContainer = $("<img />").attr("src", item.media.m);
-
-		
-	// 	return(imageContainer);
-
-
-	// 	// $('#images').append(imageContainer);
-	// 	// $(imageContainer.)
-	// },
-
 	// generateVideoOutput: function(results) {
 	// 	// videos
 	// 	var html = '';
@@ -250,14 +183,7 @@ var FishFinder = {
 	// 	$('#videos').html(html);
 	// },
 
-
-
-
-
-
 }; // end of object
-
-
 
 
 
