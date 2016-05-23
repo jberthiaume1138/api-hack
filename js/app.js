@@ -110,11 +110,8 @@ var FishFinder = {
 		// this adds the FLICKR images first, then the YouTube thumbnails
 		for (var i = 0; i < collection.length; i++) {
 			var html = '';
-			html += '<div class="grid-item">';
-			
-			//html += '<a href="' + collection[i].fullsize_url + '" target="blank" class="image-big" >';
-			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title + '"></a>';
-
+			html += '<div class="grid-item">';		
+			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title + '">';
 			html += '</div>';
 			$('#gallery').append(html);
 		};
@@ -125,8 +122,6 @@ var FishFinder = {
 		// 	// pop an item
 		// 	// process it
 		// };
-
-
 
 		// activate Masonry
 		// need to make sure this doesn't happen till after the images load in the DIV
@@ -140,17 +135,18 @@ var FishFinder = {
 		// event handlers for the elements created after the AJAX calls
 		$('.gallery-image').on('click', function() {
 			// handler to activate modal overlay 
-
-			// $('image-big').append('<img src="' + collection[i].fullsize_url + '" class="gallery-image" alt="' + collection[i].title + '">)';
-			$('.gallery-modal').append($('.image-big'));
-
 			$('.gallery-modal').css('display', 'block');
+			console.log(this);
+
+			var bigImageHTML = '';
+			bigImageHTML += '<img src="' + this.src + '" alt="' + this.title + '"></a>';
+
+			$('.gallery-modal').append(bigImageHTML);
 		});
 
-		$('.close').on('click',function() {
+		$('.close').on('click', function() {
 			$('.gallery-modal').css('display', 'none');
-		})
-
+		});
 	},
 
 	generateWiki: function(data,tag) {
@@ -187,7 +183,7 @@ var FishFinder = {
 
 
 
-$('#btnSearch').click(function() {
+$('#btnSearch').on('click', function() {
 	$('#images').empty();
 	var tag = $('#inputFinder').val();
 
