@@ -50,12 +50,11 @@ var FishFinder = {
 		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
 			// debugging to make sure the AJAX calls are functioning
 			// console.log(imageData);
-			// console.log(videoData);
+			console.log(videoData);
 			// console.log(wikiData);
 
 			FishFinder.generateWiki(wikiData,tag);
 			FishFinder.generateMasonryOutput(imageData,videoData);
-	    	
 		});
 
 	},
@@ -98,7 +97,7 @@ var FishFinder = {
 
 			objGallery.source = 'youtube';
 			objGallery.thumbnail_url = item.snippet.thumbnails.medium.url;
-			objGallery.fullsize_url = 'https://www.youtube.com/watch?v=' + item.id.videoId;
+			objGallery.fullsize_url = '<iframe width="420" height="315" src="https://www.youtube.com/watch?v=' + item.id.videoId + '" </iframe>';
 			objGallery.title = item.snippet.title;
 
 			collection.push(objGallery);	//store each object in collection array
@@ -115,10 +114,6 @@ var FishFinder = {
 			html += '">';
 			html += '</div>';
 			$('#gallery').append(html);
-
-
-
-
 		};
 
 		//create html v2.0 - randomize
@@ -132,39 +127,80 @@ var FishFinder = {
 		// activate Masonry
 		// need to make sure this doesn't happen till after the images load in the DIV
 		// perhaps use a time out...imagesLoad
+		// var elem = document.querySelector('.grid');
+		// elem.imagesLoaded( function() {
+		// 	var msnry = new Masonry( elem, {
+	 //  			// options
+	 // 			itemSelector: '.grid-item',
+	 // 			gutter: 10,
+	 //  			columnWidth: 240
+		// 	});
+		// });
+
 		var elem = document.querySelector('.grid');
-		var msnry = new Masonry( elem, {
-  			// options
- 			itemSelector: '.grid-item',
- 			gutter: 10,
-  			columnWidth: 240
+		imagesLoaded( elem, function() {
+
+			// console.log("imagesLoaded");
+
+			var msnry = new Masonry( elem, {
+				itemSelector: '.grid-item',
+	 			gutter: 10,
+	  			columnWidth: 240
+			});
 		});
 
 
-		// event handlers for the elements created after the AJAX calls
-		$('.gallery-image').on('click', function() {
-			// handler to activate modal overlay 
+		// $('.grid').imagesLoaded( function() {
+		//   // images have loaded
+		// });
 
-			$('.gallery-modal').css('display', 'block');
+		// // options
+		// $('.grid').imagesLoaded( {
+		//   // options...
+		//   },
+		//   function() {
+		//     // images have loaded
+		//   }
+		// );
 
-			console.log(this);
 
-			var bigImageHTML = '';
-			bigImageHTML += '<img src="images/x-close.gif" class="close">';
 
-			var url = $(this).data("image");
+		// var $grid = $('.grid').imagesLoaded( function() {
+	 //  		// init Masonry after all images have loaded
+	 //  		$grid.masonry({
+	 //    		// options...
+	 //    		itemSelector: '.grid-item',
+	 // 			gutter: 10,
+	 //  			columnWidth: 240
+	 //  		});
+		// });
 
-			bigImageHTML += '<img src="' + url  + '">';
 
-			console.log(bigImageHTML);
+		// // event handlers for the elements created after the AJAX calls
+		// $('.gallery-image').on('click', function() {
+		// 	// handler to activate modal overlay 
 
-			$('.gallery-modal').append(bigImageHTML);
-		});
+		// 	$('.gallery-modal').css('display', 'block');
 
-		$('.close').on('click', function() {
-			$('.gallery-modal').css('display', 'none');
-			$('.gallery-modal').empty();
-		});
+		// 	console.log(this);
+
+		// 	var bigImageHTML = '';
+		// 	bigImageHTML += '<img src="images/x-close.gif" class="close">';
+
+		// 	var url = $(this).data("image");
+
+		// 	bigImageHTML += '<img src="' + url  + '">';
+
+		// 	console.log(bigImageHTML);
+
+		// 	$('.gallery-modal').append(bigImageHTML);
+		// });
+
+		// $('.close').on('click', function() {
+		// 	$('.gallery-modal').css('display', 'none');
+		// 	console.log('close');
+		// 	// $('.gallery-modal').empty();
+		// });
 	},
 
 	generateWiki: function(data,tag) {
@@ -179,23 +215,6 @@ var FishFinder = {
        	});
         $('#wiki').html($(wrapped).find('p'));	// the p tags hold the main article, find them, and put them in the DOM
 	}
-
-
-	// generateVideoOutput: function(results) {
-	// 	// videos
-	// 	var html = '';
-
-	// 	$.each(results,function(index,value) {
-	// 		console.log(value.snippet.title);
-	// 		html += '<div>';
-	// 		html += '<p>' + value.snippet.title + '</p>';
-	// 		html += '<a href=https://www.youtube.com/watch?v=' + value.id.videoId + ' target="blank">';
-	// 		html += '<img src=' + value.snippet.thumbnail_urls.medium.url + '></a>';
-	// 		html += '</div>';
-	// 	});
-
-	// 	$('#videos').html(html);
-	// },
 
 }; // end of object
 
