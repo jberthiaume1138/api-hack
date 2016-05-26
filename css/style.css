@@ -72,7 +72,7 @@ header h1 {
 
 /*------------------------ masonry ---------------------------*/
 .grid-item { 	
-	width: 240px;
+	width: 320px;
 	padding-bottom: 10px; }
 
 .grid-item--width2 { width: 400px; }
