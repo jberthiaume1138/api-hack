@@ -49,7 +49,7 @@ var FishFinder = {
 		
 		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
 			// debugging to make sure the AJAX calls are functioning
-			// console.log(imageData);
+			console.log(imageData);
 			// console.log(videoData);
 			// console.log(wikiData);
 
@@ -86,7 +86,7 @@ var FishFinder = {
 
 			collection.push(objGallery);	//store each object in collection array
 
-			if ( i == 9 ) return false; //only return 10 images for now
+			if ( i == 19 ) return false; //only return 10 images for now
 		});
 
 
@@ -108,37 +108,82 @@ var FishFinder = {
 		});
 
 
-		// create html
-		// this adds the FLICKR images first, then the YouTube thumbnails
-		for (var i = 0; i < collection.length; i++) {
-			var html = '';
-			html += '<div class="grid-item">';
-			html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title;
-			// html += '" data-image="' + collection[i].fullsize_url;
-			// html += '" data-youtube="' + collection[i].iframe;
-			html += '">';
-			html += '</div>';
-			$('#gallery').append(html);
-		};
+		// create html version 1.0 - ordered
+		// this adds the FLICKR images first, then adds the YouTube thumbnails to the end
+		// for (var i = 0; i < collection.length; i++) {
+		// 	var html = '';
+		// 	html += '<div class="grid-item">';
+		// 	html += '<img src="' + collection[i].thumbnail_url + '" class="gallery-image" alt="' + collection[i].title;
+		// 	// html += '" data-image="' + collection[i].fullsize_url;
+		// 	// html += '" data-youtube="' + collection[i].iframe;
+		// 	html += '">';
+		// 	html += '</div>';
+		// 	$('#gallery').append(html);
+		// };
 
+				
 		
 
-		for (var i = 0; i < collection.length; i++) {
-			var mine = collection[Math.floor(Math.random()*collection.length)];
-		 	console.log(mine);
-		 	collection.pop[mine];
-		 	console.log(collection.length);
+		//create html v2.0 - randomize
+		// use the Fisher-Yates Shuffle to randomize the array of objects to make the grid more interesting
+		function shuffle(array) {
+  			var currentIndex = array.length, temporaryValue, randomIndex;
+
+			// While there remain elements to shuffle...
+			while (0 !== currentIndex) {
+
+			    // Pick a remaining element...
+			    randomIndex = Math.floor(Math.random() * currentIndex);
+			    currentIndex -= 1;
+
+			    // And swap it with the current element.
+			    temporaryValue = array[currentIndex];
+			    array[currentIndex] = array[randomIndex];
+			    array[randomIndex] = temporaryValue;
+		  	}
+			return array;
 		};
 
-		// //create html v2.0 - randomize
-		// while (collection.length > 0) {
-		// // 	// generate random value in the range of collection index
-		// // 	// pop an item
-		// // 	// process it
-		// 	var mine = collection[Math.floor(Math.random()*collection.length)];
-		// 	console.log(mine);
-		// 	collection.pop[mine];
+		var newCollection = shuffle(collection);
 
+		for (var i = newCollection.length - 1; i >= 0; i--) {
+			var html = '';
+			if (newCollection[i].source == 'youtube') {
+				html += '<div class="grid-item--width2">';
+			}
+			else {
+				html += '<div class="grid-item">';
+			}
+		 	html += '<img src="' + newCollection[i].thumbnail_url + '" class="gallery-image" alt="' + newCollection[i].title;
+		 	html += '">';
+			html += '</div>';
+			$('#gallery').append(html);
+		}
+
+
+
+
+
+
+		// while (collection.length > 0) {
+			
+
+		//  	// create a random index less than or equal to the total number of items in the array
+		//  	var randomIndex = Math.floor(Math.random() * collection.length);
+		//  	// using that index, pop an item out of the array
+		//  	var randomItem = collection.pop(randomIndex);
+		//  	console.log(randomIndex);
+		//  	console.log(randomItem);
+		//  	console.log('Collection length: ' + collection.length);
+
+		//  	var html = '';
+		//  	html += '<div class="grid-item">';
+		//  	html += '<img src="' + randomItem.thumbnail_url + '" class="gallery-image" alt="' + randomItem.title;
+		//  	html += '">';
+		// 	html += '</div>';
+		// 	$('#gallery').append(html);
+		 	
+		//  	// console.log(html);	 	
 		// };
 
 
@@ -149,7 +194,7 @@ var FishFinder = {
 			var msnry = new Masonry( elem, {
 				itemSelector: '.grid-item',
 	 			gutter: 10,
-	  			columnWidth: 320
+	  			columnWidth: 240
 			});
 		});
 
