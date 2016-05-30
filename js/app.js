@@ -149,7 +149,7 @@ var FishFinder = {
 		for (var i = newCollection.length - 1; i >= 0; i--) {
 			var html = '';
 			if (newCollection[i].source == 'youtube') {
-				html += '<div class="grid-item--width2">';
+				html += '<div class="grid-item grid-item--width2">';
 			}
 			else {
 				html += '<div class="grid-item">';
