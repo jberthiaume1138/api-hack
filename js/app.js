@@ -5,9 +5,30 @@ $(document).ready(function(){
 
 'use strict'
 
-var FishFinder = { 
+var FishFinder = {
+
+	start: function() {
+		$('#gallery').empty();
+		$('#wiki').empty();
+
+		var tag = $('#inputFinder').val();
+
+		//debugging dummy value
+		tag = 'moorish idol';
+
+		FishFinder.getEverything(tag);
+
+		$('#inputFinder').val('');
+
+	},
 
 	getEverything: function(tag) {
+
+
+		var flickrAPIkey = '86033d438231b67be4d7a301d6eb3dde';
+		var flickrAPIsecret = '0298f9549f161aaf';
+
+
 
 		var promiseImages = $.Deferred();
 
@@ -45,14 +66,9 @@ var FishFinder = {
 					.done(function(data) {
 						promiseWiki.resolve(data);
 					});
-
 		
 		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
-			// debugging to make sure the AJAX calls are functioning
-			console.log(imageData);
-			// console.log(videoData);
-			// console.log(wikiData);
-
+			// success getting the data from the external API's - now use it 
 			FishFinder.generateWiki(wikiData,tag);
 			FishFinder.generateMasonryOutput(imageData,videoData);
 		});
@@ -86,7 +102,7 @@ var FishFinder = {
 
 			collection.push(objGallery);	//store each object in collection array
 
-			if ( i == 19 ) return false; //only return 10 images for now
+			if ( i == 19 ) return false;	//only return 20 images for now
 		});
 
 
@@ -108,7 +124,7 @@ var FishFinder = {
 		});
 
 
-		// create html version 1.0 - ordered
+		// create html version 1.0 - ordered by array index
 		// this adds the FLICKR images first, then adds the YouTube thumbnails to the end
 		// for (var i = 0; i < collection.length; i++) {
 		// 	var html = '';
@@ -121,10 +137,8 @@ var FishFinder = {
 		// 	$('#gallery').append(html);
 		// };
 
-				
-		
 
-		//create html v2.0 - randomize
+		// create html v2.0 - randomize
 		// use the Fisher-Yates Shuffle to randomize the array of objects to make the grid more interesting
 		function shuffle(array) {
   			var currentIndex = array.length, temporaryValue, randomIndex;
@@ -161,32 +175,6 @@ var FishFinder = {
 		}
 
 
-
-
-
-
-		// while (collection.length > 0) {
-			
-
-		//  	// create a random index less than or equal to the total number of items in the array
-		//  	var randomIndex = Math.floor(Math.random() * collection.length);
-		//  	// using that index, pop an item out of the array
-		//  	var randomItem = collection.pop(randomIndex);
-		//  	console.log(randomIndex);
-		//  	console.log(randomItem);
-		//  	console.log('Collection length: ' + collection.length);
-
-		//  	var html = '';
-		//  	html += '<div class="grid-item">';
-		//  	html += '<img src="' + randomItem.thumbnail_url + '" class="gallery-image" alt="' + randomItem.title;
-		//  	html += '">';
-		// 	html += '</div>';
-		// 	$('#gallery').append(html);
-		 	
-		//  	// console.log(html);	 	
-		// };
-
-
 		// activate Masonry
 		// using imagesLoaded to make sure this doesn't happen till after the images load in the DIV
 		var elem = document.querySelector('.grid');
@@ -200,7 +188,7 @@ var FishFinder = {
 
 
 
-
+		// ----------------------------- for version 2.0 --------------------------------------
 		// // event handlers for the elements created after the AJAX calls
 		// $('.gallery-image').on('click', function() {
 		// 	// handler to activate modal overlay 
@@ -249,16 +237,14 @@ var FishFinder = {
 
 
 $('#btnSearch').on('click', function() {
-	$('#images').empty();
-	var tag = $('#inputFinder').val();
-
-	//debugging dummy value
-	tag = 'moorish idol';
-
-	FishFinder.getEverything(tag);
-
-	$('#inputFinder').val('');
+	FishFinder.start();
 });
+
+$('#inputFinder').keydown(function(event) {
+	FishFinder.start();
+});
+
+
 
 
 })();
