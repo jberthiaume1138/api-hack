@@ -25,11 +25,6 @@ var FishFinder = {
 	getEverything: function(tag) {
 
 
-		var flickrAPIkey = '86033d438231b67be4d7a301d6eb3dde';
-		var flickrAPIsecret = '0298f9549f161aaf';
-
-
-
 		var promiseImages = $.Deferred();
 
 		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
@@ -44,6 +39,13 @@ var FishFinder = {
 	                .fail(function(){
 	                 	promiseImages.reject();
 	                });
+
+
+	    // re-write to use different authorized Flickr API
+		var flickrAPIkey = '86033d438231b67be4d7a301d6eb3dde';
+		var flickrAPIsecret = '0298f9549f161aaf';
+
+
 
 
 		var promiseVideos = $.Deferred();
