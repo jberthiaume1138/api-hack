@@ -164,11 +164,12 @@ var FishFinder = {
 			var html = '';
 			if (newCollection[i].source == 'youtube') {
 				html += '<div class="grid-item grid-item--width2">';
+				html += '<img src="' + newCollection[i].thumbnail_url + '" class="gallery-image" width="240" alt="' + newCollection[i].title;
 			}
 			else {
 				html += '<div class="grid-item">';
+				html += '<img src="' + newCollection[i].thumbnail_url + '" class="gallery-image" alt="' + newCollection[i].title;
 			}
-		 	html += '<img src="' + newCollection[i].thumbnail_url + '" class="gallery-image" alt="' + newCollection[i].title;
 		 	html += '">';
 			html += '</div>';
 			$('#gallery').append(html);
