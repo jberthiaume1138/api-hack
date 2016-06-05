@@ -25,55 +25,91 @@ var FishFinder = {
 	getEverything: function(tag) {
 
 
-		var promiseImages = $.Deferred();
+		// var promiseImages = $.Deferred();
 
-		$.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
-	                {
-	                  tags: tag,
-	                  tagmode: "any",
-	                  format: "json"
-	                })
-	                .done(function(data) {
-	                	promiseImages.resolve(data);
-	                })
-	                .fail(function(){
-	                 	promiseImages.reject();
-	                });
+		// $.getJSON("http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?",
+	 //                {
+	 //                  tags: tag,
+	 //                  tagmode: "any",
+	 //                  format: "json"
+	 //                })
+	 //                .done(function(data) {
+	 //                	promiseImages.resolve(data);
+	 //                })
+	 //                .fail(function(){
+	 //                 	promiseImages.reject();
+	 //                });
 
 
 	    // re-write to use different authorized Flickr API
 		var flickrAPIkey = '86033d438231b67be4d7a301d6eb3dde';
 		var flickrAPIsecret = '0298f9549f161aaf';
 
+		var promiseImages = $.Deferred();
+
+		var flickrURL = 'https://api.flickr.com/services/rest/';
+		// flickrURL += 'method=flickr.photos.search';
+		// flickrURL += '&api_key=' + flickrAPIkey;
+		// flickrURL += '&tags=' + tag;
+		// flickrURL += '&format=json';
+
+		$.getJSON(flickrURL,
+				{
+					method: "flickr.photos.search",
+					tags: tag,
+					api_key: flickrAPIkey,
+					format: "json",
+					nojsoncallback: 1
+				})
+				.done(function(data) {
+					promiseImages.resolve(data);
+					console.log('success');
+				})
+				.fail(function(error){
+			        promiseImages.reject();
+			        // console.log('failed');
+			        // console.log(error);
+			    });
+
+
+		$.when(promiseImages).done(function(imageData) {
+				console.log(imageData);
+			})
+			.fail(function(errorData) {
+				console.log('fail');
+			});
 
 
 
-		var promiseVideos = $.Deferred();
+		// var promiseVideos = $.Deferred();
 
-		$.getJSON('https://www.googleapis.com/youtube/v3/search', 
-					{
-						part: 'snippet',
-						q: tag,
-						r: 'json',
-						key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
-					})		
-					.done(function(data) {
-						promiseVideos.resolve(data);
-					});
+		// $.getJSON('https://www.googleapis.com/youtube/v3/search', 
+		// 			{
+		// 				part: 'snippet',
+		// 				q: tag,
+		// 				r: 'json',
+		// 				key: 'AIzaSyBvdTd6SJBWbM9AHytx3HBHfBK5FPXbwaA'
+		// 			})		
+		// 			.done(function(data) {
+		// 				promiseVideos.resolve(data);
+		// 			});
 
 
-		var promiseWiki = $.Deferred();
+		// var promiseWiki = $.Deferred();
 
-		$.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?")
-					.done(function(data) {
-						promiseWiki.resolve(data);
-					});
+		// $.getJSON("http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&section=0&page=" + tag + "&callback=?")
+		// 			.done(function(data) {
+		// 				promiseWiki.resolve(data);
+		// 			});
 		
-		$.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
-			// success getting the data from the external API's - now use it 
-			FishFinder.generateWiki(wikiData,tag);
-			FishFinder.generateMasonryOutput(imageData,videoData);
-		});
+		// $.when(promiseImages,promiseVideos,promiseWiki).done(function(imageData,videoData,wikiData) {	
+
+		// 	console.log(imageData);
+
+		// 	// success getting the data from the external API's - now use it 
+		// 	FishFinder.generateWiki(wikiData,tag);
+		// 	FishFinder.generateMasonryOutput(imageData,videoData);
+		// });
 
 	},
 
